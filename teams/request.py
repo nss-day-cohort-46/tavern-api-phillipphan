@@ -39,11 +39,11 @@ def get_teams(filters):
                             t.id,
                             t.name,
                             ts.id score_id,
-                            ts.teamId,
-                            ts.score,
-                            ts.time_stamp
+                            ts.teamId team_id,
+                            ts.score team_score,
+                            ts.timeStamp time_stamp
                         FROM Teams t
-                        LEFT OUTER JOIN TeamScore ts ON ts.teamId = t.id
+                        LEFT JOIN TeamScore ts ON ts.teamId = t.id
                         """)
 
                         dataset = db_cursor.fetchall()
@@ -55,11 +55,10 @@ def get_teams(filters):
                             else:
                                 team = teams[row['id']]
 
-                            score = int(row['score']) if row['score'] is not None else 0
+                            score = int(row['team_score']) if row['team_score'] is not None else 0
                             if score > 0:
-                                team_score = TeamScore(row['score_id'], row['teamId'], score, row['timeStamp'])
-                            team.scores.append(team_score.__dict__)
-
+                                team_score = TeamScore(row['score_id'], row['team_id'], score, row['time_stamp'])
+                                team.scores.append(team_score.__dict__)
 
                     elif related_resource == "players":
                         db_cursor.execute("""
@@ -84,7 +83,7 @@ def get_teams(filters):
                                 team = teams[row['id']]
 
                             player = Player(row['player_id'], row['firstName'], row['lastName'], row['teamId'])
-                        team.players.append(player.__dict__)
+                            team.players.append(player.__dict__)
 
             json_teams = []
             for team in teams.values():

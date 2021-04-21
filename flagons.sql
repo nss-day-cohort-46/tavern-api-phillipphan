@@ -6,6 +6,15 @@
 -- DROP TABLE IF EXISTS Players;
 -- DROP TABLE IF EXISTS Teams;
 
+SELECT *
+FROM TeamScore
+
+SELECT *
+FROM Teams
+
+SELECT *
+FROM Players
+
 CREATE TABLE `Teams` (
 	`id`	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 	`name`	TEXT NOT NULL
@@ -51,3 +60,22 @@ INSERT INTO `TeamScore` VALUES (null, 2, 1, 1583873462376);
 INSERT INTO `TeamScore` VALUES (null, 2, 6, 1583873462376);
 INSERT INTO `TeamScore` VALUES (null, 2, 3, 1583873462376);
 
+SELECT
+    t.id,
+    t.name,
+    ts.id score_id,
+    ts.teamId,
+    ts.score,
+    ts.timeStamp
+FROM Teams t
+LEFT JOIN TeamScore ts ON ts.teamId = t.id
+
+SELECT
+    t.id,
+    t.name,
+    p.id player_id,
+    p.firstName,
+    p.lastName,
+    p.teamId
+FROM Teams t
+JOIN Players p ON p.teamId = t.id
